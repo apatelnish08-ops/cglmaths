@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CGL Maths — Practice & Admin Upload</title>
+<meta name="description" content="CGL Maths: quizzes, PYQ tests and admin uploader to Google Sheets" />
+<style>
+  :root{
+    --primary:#004aad; --accent:#00a3ff; --muted:#3b556f; --bg:#f6fbff;
+    --card:#fff; --success:#1e9a59; --danger:#d9534f;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  body{font-family:Inter,Arial,Helvetica,sans-serif;margin:0; background:var(--bg); color:#072341;}
+  header{background:linear-gradient(90deg,var(--primary),#0066cc); color:#fff;padding:18px 12px;text-align:center}
+  header h1{margin:0;font-size:20px}
+  header p{margin:6px 0 0 0;opacity:0.92;font-size:13px}
+  nav{display:flex;gap:8px;justify-content:center;padding:12px;flex-wrap:wrap;background:#063a7a}
+  nav a{color:#fff;padding:8px 12px;text-decoration:none;border-radius:8px;font-size:14px}
+  nav a:hover{background:rgba(255,255,255,0.06)}
+  main{max-width:1100px;margin:18px auto;padding:14px}
+  .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+  @media (max-width:980px){ .grid{grid-template-columns:1fr} nav{justify-content:space-around} }
+  section.card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:0 10px 30px rgba(10,20,40,0.06);margin-bottom:16px}
+  h2{color:var(--primary);margin:0 0 8px 0}
+  p.note{color:var(--muted);margin:0}
+   .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6ff;color:var(--primary);font-size:13px}
+  .formula{background:#eef6ff;padding:10px;border-radius:8px;margin-bottom:8px}
+  /* Quiz */
+  .quiz-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+  .btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+  .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--primary)}
+  .question-card{border:1px solid #eef3fb;padding:12px;border-radius:8px;margin-bottom:12px}
+  .q-title{font-weight:700;margin-bottom:8px}
+  .options{display:flex;flex-direction:column;gap:8px}
+  label.option{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;border:1px solid transparent;cursor:pointer}
+  label.option input{transform:scale(1.02);margin-right:8px}
+  label.option.correct{background:#e8fff7;border-color:#a7f0d1}
+  label.option.wrong{background:#fff0f0;border-color:#ffc4c4}
+  .explanation{background:#fbfdff;border-left:4px solid var(--accent);padding:10px;margin-top:8px;border-radius:6px;color:#07304a}
+  #result{font-weight:700;margin-top:8px}
+</style>
+</head>
+<body>
+  <header>
+    <h1>CGL Maths — Practice & Admin Upload</h1>
+    <p>Random quizzes, PYQ test and admin uploader to Google Sheets</p>
+  </header>
+
+  <nav>
+    <a href="#quiz">Quiz</a>
+    <a href="#pyq">PYQ Test</a>
+    <a href="#formulae">Formulae</a>
+    <a href="#admin">Admin</a>
+    </nav>
+
+  <main>
+    <div class="grid">
+      <div>
+    <!-- RANDOM QUIZ -->
+<section id="quiz" class="card">
+  <h2>Random Quiz</h2>
+  <div class="quiz-meta">
+    <div class="chip" id="q-count">5 Questions</div>
+    <button class="btn" id="reloadBtn">Load New Quiz</button>
+    <button class="btn" id="submitBtn">Submit & Show Solutions</button>
+  </div>
+  <div id="quiz-container"></div>
+  <div id="result"></div>
+</section>
+
+<!-- PYQ TEST -->
+<section id="pyq" class="card">
+  <h2>PYQ Test — Previous Year Questions</h2>
+  <p class="note">Choose a year or All. Questions adapted from past papers with clear solutions.</p>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+    <label>Year:</label>
+    <select id="pyq-year">
+      <option value="all">All</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+    </select>
+
+    <label>Questions:</label>
+    <select id="pyq-num"><option value="3">3</option><option value="5" selected>5</option><option value="7">7</option></select>
+     <button class="btn" id="loadPyqBtn">Load PYQ Test</button>
+    <button class="btn" id="submitPyqBtn">Submit PYQ Test</button>
+  </div>
+
+  <div id="pyq-container"></div>
+  <div id="pyq-result" style="margin-top:8px"></div>
+</section>
+
+<!-- FORMULAE -->
+<section id="formulae" class="card">
+  <h2>Formulae Highlights</h2>
+  <div class="formula"><strong>Percentage:</strong> (Part / Whole) × 100</div>
+  <div class="formula"><strong>Speed:</strong> Speed = Distance / Time</div>
+  <div class="formula"><strong>Simple Interest:</strong> SI = (P × R × T) / 100</div>
+  <div class="formula"><strong>Quadratic:</strong> x = [-b ± √(b² − 4ac)] / 2a</div>
+</section>
+</div> <!-- END LEFT COLUMN -->
+
+      <aside>
+        <!-- QUICK TOPICS -->
+        <section class="card">
+          <h2>Quick Topics</h2>
+          <ul style="line-height:1.8;color:#3b556f;margin:8px 0 0 16px">
+            <li>Number System</li>
+            <li>Percentage & Profit/Loss</li>
+            <li>Time, Speed & Work</li>
+            <li>Algebra</li>
+            <li>Geometry & Mensuration</li>
+            <li>Trigonometry & DI</li>
+          </ul>
+        </section>
+
+        <!-- ADMIN PANEL -->
+        <section id="admin" class="card">
+          <h2>Admin Upload (Visible to All)</h2>
+          <p class="note">Enter your Google Apps Script Web App URL to upload questions to Google Sheets.</p>
+
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label>Google Script URL:</label>
+            <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+
+            <label>Category:</label>
+            <select id="upload-category"><option value="quiz">Quiz</option><option value="pyq">PYQ</option><option value="topic">Topic</option></select>
+
+            <label>Question:</label>
+            <textarea id="upload-question" placeholder="Write the question here..."></textarea>
+
+            <label>Option A:</label><input type="text" id="upload-optA">
+            <label>Option B:</label><input type="text" id="upload-optB">
+            <label>Option C:</label><input type="text" id="upload-optC">
+            <label>Option D:</label><input type="text" id="upload-optD">
+
+            <label>Correct Answer:</label><input type="text" id="upload-answer">
+            <label>Solution / Explanation:</label><textarea id="upload-solution"></textarea>
+
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" id="uploadQuestionBtn">Upload Question to Google Sheet</button>
+            </div>
+            <div id="admin-status" style="margin-top:10px"></div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+   <footer style="padding:14px;text-align:center;color:#fff;background:#063a7a;margin-top:26px">
+    © 2025 CGL Maths • Built with HTML5, CSS & JavaScript • Use Google Sheets for storage
+  </footer>
+
+<script>
+/* =========================
+   RANDOM QUIZ
+   ========================= */
+const QUESTION_BANK = [
+  { q:'What is 25% of 200?', options:['25','50','75','100'], answer:'50', explanation:'25% of 200 = 50' },
+  { q:'Speed = Distance / Time. Distance 120 km, Time 2 hrs?', options:['40 km/hr','50 km/hr','60 km/hr','70 km/hr'], answer:'60 km/hr', explanation:'120 ÷ 2 = 60 km/hr' },
+  { q:'If 5x = 20, then x = ?', options:['2','4','5','10'], answer:'4', explanation:'20 ÷ 5 = 4' },
+  { q:'Area of circle formula?', options:['πr²','2πr','πd','r²'], answer:'πr²', explanation:'Area = π × r × r = πr²' },
+  { q:'Simple Interest formula?', options:['(P×R×T)/100','P×T/R','(R×T)/P','(P+R)/T'], answer:'(P×R×T)/100', explanation:'SI = (P×R×T)/100' }
+];
+const NUM_QUESTIONS = 5;
+let selectedQuestions = [];
+
+function shuffle(arr){ return arr.slice().sort(()=>Math.random()-0.5); }
+function getRandomQuestions(){ return shuffle(QUESTION_BANK).slice(0, NUM_QUESTIONS); }
+function renderQuiz(){
+  selectedQuestions = getRandomQuestions();
+  document.getElementById('q-count').innerText = ${NUM_QUESTIONS} Questions;
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  selectedQuestions.forEach((item, idx)=>{
+    const card = document.createElement('div'); card.className='question-card';
+    const title = document.createElement('div'); title.className='q-title'; title.innerText=Q${idx+1}. ${item.q};
+    const opts = document.createElement('div'); opts.className='options';
+    item.options.forEach(opt=>{
+      const id = q${idx}-${opt}.replace(/\s+/g,'');
+      const label = document.createElement('label'); label.className='option'; label.htmlFor=id;
+      const input = document.createElement('input'); input.type='radio'; input.name=q${idx}; input.id=id; input.value=opt;
+      label.appendChild(input); label.appendChild(document.createElement('span')).innerText=opt;
+      opts.appendChild(label);
+    });
+    const expl = document.createElement('div'); expl.className='explanation'; expl.style.display='none';
+    expl.innerHTML=<div style="font-weight:700">Solution:</div><div>${item.explanation}</div>;
+    card.appendChild(title); card.appendChild(opts); card.appendChild(expl);
+    container.appendChild(card);
+  });
+  document.getElementById('result').innerText='';
+  }
+
+function submitQuiz(){
+  let score=0;
+  selectedQuestions.forEach((item,idx)=>{
+    const chosen=document.querySelector(input[name='q${idx}']:checked);
+    const card=document.getElementById(quiz-container).children[idx];
+    const labels=card.querySelectorAll('label.option'); labels.forEach(l=>{l.classList.remove('correct');l.classList.remove('wrong')});
+    labels.forEach(l=>{if(l.innerText.trim()===item.answer) l.classList.add('correct')});
+    if(chosen){ if(chosen.value===item.answer) score++; else chosen.closest('label').classList.add('wrong') }
+    card.querySelector('.explanation').style.display='block';
+    card.querySelectorAll('input').forEach(i=>i.disabled=true);
+  });
+  document.getElementById('result').innerText=Your Score: ${score}/${NUM_QUESTIONS};
+}
+
+document.getElementById('reloadBtn').addEventListener('click', renderQuiz);
+document.getElementById('submitBtn').addEventListener('click', submitQuiz);
+
+/* =========================
+   PYQ Section
+   ========================= */
+const PYQ_BANK=[
+    { year:2024, q:'A shopkeeper marks up 20% & gives 10% discount. CP=150. SP & profit%?', options:['SP=162, 8%','SP=165, 10%','SP=160, 6%','SP=170, 13%'], answer:'SP=162, 8%', explanation:'MP=150×1.2=180, SP=180×0.9=162, Profit=12⇒12/150×100=8%' },
+{ year:2023, q:'lcm(6,x)=60, gcd(6,x)=2, find x?', options:['10','12','20','30'], answer:'20', explanation:'lcm×gcd=6×x ⇒ x=120/6=20' }
+];
+
+let currentPyq=[];
+function getFilteredPyq(year){ return year==='all'? PYQ_BANK.slice() : PYQ_BANK.filter(p=>String(p.year)===String(year)); }
+
+function loadPyqTest(){
+  const year=document.getElementById('pyq-year').value;
+  const num=parseInt(document.getElementById('pyq-num').value,10);
+  const pool=getFilteredPyq(year); if(pool.length===0){ alert('No PYQ for this year'); return; }
+  const shuffled=shuffle(pool);
+  currentPyq=shuffled.slice(0,num);
+  const container=document.getElementById('pyq-container'); container.innerHTML='';
+  currentPyq.forEach((item,idx)=>{
+    const card=document.createElement('div'); card.className='question-card';
+    const title=document.createElement('div'); title.className='q-title'; title.innerText=(${item.year}) Q${idx+1}. ${item.q};
+    const opts=document.createElement('div'); opts.className='options';
+    item.options.forEach(opt=>{
+      const id=pyq${idx}-${opt}.replace(/\s+/g,'');
+      const label=document.createElement('label'); label.className='option'; label.htmlFor=id;
+       const input=document.createElement('input'); input.type='radio'; input.name=pyq${idx}; input.id=id; input.value=opt;
+      label.appendChild(input); label.appendChild(document.createElement('span')).innerText=opt;
+      opts.appendChild(label);
+    });
+    const expl=document.createElement('div'); expl.className='explanation'; expl.style.display='none';
+    expl.innerHTML=<div style="font-weight:700">Solution:</div><div>${item.explanation}</div>;
+    card.appendChild(title);card.appendChild(opts); card.appendChild(expl);
+    container.appendChild(card);
+  });
+  document.getElementById('pyq-result').innerText='';
+}
+
+function submitPyqTest(){
+  let score=0;
+  currentPyq.forEach((item,idx)=>{
+    const chosen=document.querySelector(input[name='pyq${idx}']:checked);
+    const card=document.getElementById('pyq-container').children[idx];
+    const labels=card.querySelectorAll('label.option'); labels.forEach(l=>{l.classList.remove('correct');l.classList.remove('wrong')});
+    labels.forEach(l=>{if(l.innerText.trim()===item.answer) l.classList.add('correct')});
+    if(chosen){ if(chosen.value===item.answer) score++; else chosen.closest('label').classList.add('wrong') }
+    card.querySelector('.explanation').style.display='block';
+    card.querySelectorAll('input').forEach(i=>i.disabled=true);
+  });
+  document.getElementById('pyq-result').innerText=Your Score: ${score}/${currentPyq.length};
+}
+
+document.getElementById('loadPyqBtn').addEventListener('click', loadPyqTest);
+document.getElementById('submitPyqBtn').addEventListener('click', submitPyqTest);
+/* =========================
+   ADMIN UPLOAD FUNCTION
+   ========================= */
+document.getElementById('uploadQuestionBtn').addEventListener('click',()=>{
+  const url=document.getElementById('scriptUrl').value.trim();
+  if(!url){ alert('Enter your Google Script URL'); return; }
+  const payload={
+    category:document.getElementById('upload-category').value,
+    question:document.getElementById('upload-question').value,
+    optA:document.getElementById('upload-optA').value,
+    optB:document.getElementById('upload-optB').value,
+    optC:document.getElementById('upload-optC').value,
+    optD:document.getElementById('upload-optD').value,
+    answer:document.getElementById('upload-answer').value,
+    solution:document.getElementById('upload-solution').value
+  };
+  fetch(url+'?action=upload&data='+encodeURIComponent(JSON.stringify(payload)))
+  .then(res=>res.text())
+  .then(txt=>document.getElementById('admin-status').innerText='Upload Success ✅')
+  .catch(err=>document.getElementById('admin-status').innerText='Upload Failed ❌');
+});
+
+/* =========================
+   INITIAL LOAD
+   ========================= */
+renderQuiz();
+loadPyqTest();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
